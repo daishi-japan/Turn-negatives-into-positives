@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Pattern 5 - 手書き × カジュアル</title>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      background: #E8E4DF;
+      color: #3a3a3a;
+    }
+
+    .design-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+      padding: 10px 20px;
+      display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+      font-size: 12px; border-bottom: 1px solid #333;
+    }
+    .design-nav span { color: #666; font-weight: bold; letter-spacing: 1px; }
+    .design-nav a { color: #888; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
+    .design-nav a.active { background: #fff; color: #000; font-weight: bold; }
+    .design-nav a:hover { color: #fff; }
+
+    .phone {
+      max-width: 420px;
+      margin: 70px auto 40px;
+      background: #F5F0EB;
+      border-radius: 32px;
+      min-height: 720px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.08);
+      border: 2px solid #d4cdc5;
+    }
+
+    .header {
+      padding: 20px 24px 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-size: 15px; font-weight: 900; color: #8B7355;
+    }
+    .menu-wave {
+      font-size: 18px; color: #8B7355;
+    }
+
+    .main {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 0 28px 48px;
+    }
+
+    .catchcopy {
+      font-size: 22px; font-weight: 900;
+      text-align: center; margin-bottom: 28px;
+      color: #5a4a3a;
+      line-height: 1.6;
+    }
+    .catchcopy .accent {
+      color: #D4764E;
+    }
+
+    .input-area {
+      background: #fff;
+      border: 2px dashed #c4b8a8;
+      border-radius: 20px;
+      padding: 20px;
+      min-height: 140px;
+      font-size: 16px;
+      color: #c4b8a8;
+      line-height: 1.6;
+    }
+
+    .btn {
+      margin-top: 16px;
+      padding: 18px;
+      text-align: center;
+      border: 2px solid #D4764E;
+      border-radius: 24px;
+      font-size: 17px; font-weight: 900;
+      cursor: pointer;
+      background: #D4764E;
+      color: #fff;
+    }
+
+    .pattern-label {
+      text-align: center; margin-top: 24px;
+      font-size: 11px; color: #c4b8a8;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="design-nav">
+  <span>DESIGN PATTERNS</span>
+  <a href="pattern1.html">1. ダーク×ネオン</a>
+  <a href="pattern2.html">2. ポップ×カラフル</a>
+  <a href="pattern3.html">3. ミニマル×ホワイト</a>
+  <a href="pattern4.html">4. グラデーション×温かみ</a>
+  <a href="pattern5.html" class="active">5. 手書き×カジュアル</a>
+</div>
+
+<div class="phone">
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-wave">~</div>
+  </div>
+
+  <div class="main">
+    <div class="catchcopy">モヤモヤを入れたら、<br><span class="accent">笑って戻れる。</span></div>
+
+    <div class="input-area">ここに書いてみて...</div>
+
+    <div class="btn">気持ち切り替える！</div>
+
+    <div class="pattern-label">PATTERN 5 / 手書き × カジュアル</div>
+  </div>
+</div>
+
+</body>
+</html>

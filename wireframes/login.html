@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe - ログイン</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .wf-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #222; color: #fff; padding: 12px 24px;
+      display: flex; gap: 24px; align-items: center;
+      font-size: 13px;
+    }
+    .wf-nav a { color: #aaa; text-decoration: none; }
+    .wf-nav a.active { color: #fff; font-weight: bold; }
+    .wf-nav span { color: #666; }
+
+    .frame {
+      max-width: 480px;
+      margin: 80px auto 40px;
+      background: #fff;
+      border: 2px solid #333;
+      min-height: 700px;
+      display: flex; flex-direction: column;
+      justify-content: center;
+    }
+
+    .screen-title {
+      text-align: center; padding: 12px;
+      font-size: 11px; color: #999; letter-spacing: 2px;
+      position: absolute; top: 0; left: 0; right: 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .login-container {
+      padding: 0 32px;
+      position: relative;
+    }
+
+    .app-logo { font-size: 24px; font-weight: bold; text-align: center; }
+    .app-tagline {
+      font-size: 13px; color: #999; text-align: center;
+      margin-top: 4px; margin-bottom: 36px;
+    }
+
+    .tabs {
+      display: flex; border: 2px solid #333; border-radius: 6px;
+      overflow: hidden; margin-bottom: 28px;
+    }
+    .tab {
+      flex: 1; text-align: center; padding: 10px;
+      font-size: 14px; font-weight: bold;
+      border-right: 1px solid #333;
+    }
+    .tab:last-child { border-right: none; }
+    .tab.active { background: #333; color: #fff; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; color: #666; margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%; border: 2px solid #333; border-radius: 6px;
+      padding: 12px; font-size: 14px; color: #999;
+    }
+
+    .btn {
+      display: block; width: 100%;
+      padding: 14px; text-align: center;
+      border: 2px solid #333; border-radius: 6px;
+      font-size: 16px; font-weight: bold;
+      background: #333; color: #fff;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wf-nav">
+  <span>WIREFRAME</span>
+  <a href="index.html">1. メイン</a>
+  <a href="login.html" class="active">2. ログイン</a>
+  <a href="history.html">3. 履歴</a>
+</div>
+
+<div class="frame" style="position: relative;">
+  <div class="screen-title">SCREEN 2 / ログイン</div>
+
+  <div class="login-container">
+    <div class="app-logo">ネガポジ変換</div>
+    <div class="app-tagline">モヤッとしたら、すぐ変換。</div>
+
+    <div class="tabs">
+      <div class="tab active">ログイン</div>
+      <div class="tab">サインアップ</div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">メールアドレス</div>
+      <div class="form-input">user@example.com</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">パスワード</div>
+      <div class="form-input">********</div>
+    </div>
+
+    <div class="btn">ログイン</div>
+  </div>
+</div>
+
+</body>
+</html>

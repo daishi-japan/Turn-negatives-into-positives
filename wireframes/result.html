@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe - 結果画面</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .wf-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #222; color: #fff; padding: 12px 24px;
+      display: flex; gap: 24px; align-items: center;
+      font-size: 13px;
+    }
+    .wf-nav a { color: #aaa; text-decoration: none; }
+    .wf-nav a.active { color: #fff; font-weight: bold; }
+    .wf-nav span { color: #666; }
+
+    .frame {
+      max-width: 480px;
+      margin: 80px auto 40px;
+      background: #fff;
+      border: 2px solid #333;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-title {
+      text-align: center; padding: 12px;
+      font-size: 11px; color: #999; letter-spacing: 2px;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* ===== Minimal header ===== */
+    .header {
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header .logo { font-size: 14px; color: #999; }
+    .header .menu-icon {
+      width: 20px; height: 14px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer;
+    }
+    .header .menu-icon span {
+      display: block; height: 2px; background: #999; border-radius: 1px;
+    }
+
+    /* ===== Result content ===== */
+    .result-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 24px 40px;
+    }
+
+    /* Original (small) */
+    .original {
+      font-size: 13px; color: #999;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid #ddd; border-radius: 6px;
+      background: #fafafa;
+    }
+
+    .arrow-down {
+      text-align: center; font-size: 20px; color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    /* Result box */
+    .result-box {
+      border: 2px solid #333; border-radius: 8px;
+      padding: 24px;
+      background: #fafafa;
+    }
+    .result-text {
+      font-size: 17px; line-height: 2; font-weight: 500;
+    }
+    .typing-cursor {
+      display: inline-block; width: 2px; height: 18px;
+      background: #333; margin-left: 2px;
+      vertical-align: text-bottom;
+    }
+
+    /* Tone chips */
+    .reconvert {
+      margin-top: 20px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+      align-items: center;
+    }
+    .reconvert-label {
+      font-size: 11px; color: #999; width: 100%;
+      margin-bottom: 4px;
+    }
+    .chip {
+      border: 1px solid #bbb; border-radius: 20px;
+      padding: 6px 14px; font-size: 12px;
+      color: #666; background: #fff; cursor: pointer;
+    }
+
+    /* Back button */
+    .btn-back {
+      display: block; width: 100%;
+      padding: 14px; text-align: center;
+      border: 2px solid #333; border-radius: 8px;
+      font-size: 14px;
+      background: #fff; color: #333;
+      margin-top: 20px; cursor: pointer;
+    }
+
+    .annotation {
+      margin-top: 20px; font-size: 11px; color: #ccc;
+      font-style: italic; line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wf-nav">
+  <span>WIREFRAME</span>
+  <a href="index.html">1. 入力</a>
+  <a href="result.html" class="active">2. 結果</a>
+  <a href="login.html">3. ログイン</a>
+  <a href="history.html">4. 履歴</a>
+</div>
+
+<div class="frame">
+  <div class="screen-title">SCREEN 2 / 結果画面</div>
+
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="result-content">
+
+    <!-- Original input (small) -->
+    <div class="original">
+      仕事でミスばかりして、自分には向いてないと思う...
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <!-- Converted result -->
+    <div class="result-box">
+      <div class="result-text">
+        はあ！？ミスばっかり？？それ「挑戦しまくってる」って読むんだよ！！
+        向いてないとか関係ねえ！お前はまだ本気出してないだけ！
+        ていうか向いてない仕事をここまでやれてる時点で才能の塊だろ！！<span class="typing-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Re-convert chips -->
+    <div class="reconvert">
+      <div class="reconvert-label">別の感じで変換しなおす：</div>
+      <div class="chip">親友風</div>
+      <div class="chip">偉人風</div>
+      <div class="chip">ギャル風</div>
+      <div class="chip">やさしめ</div>
+    </div>
+
+    <!-- Back to input -->
+    <div class="btn-back">もう一回吐き出す</div>
+
+    <div class="annotation">
+      ※ 元のネガティブ文を小さく表示 → 変換結果を大きく表示<br>
+      ※ タイピングアニメーションで1文字ずつ出現<br>
+      ※ トーン変更チップで再変換可能<br>
+      ※ 「もう一回吐き出す」で入力画面に戻る
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe - 履歴</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .wf-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #222; color: #fff; padding: 12px 24px;
+      display: flex; gap: 24px; align-items: center;
+      font-size: 13px;
+    }
+    .wf-nav a { color: #aaa; text-decoration: none; }
+    .wf-nav a.active { color: #fff; font-weight: bold; }
+    .wf-nav span { color: #666; }
+
+    .frame {
+      max-width: 480px;
+      margin: 80px auto 40px;
+      background: #fff;
+      border: 2px solid #333;
+      min-height: 700px;
+    }
+
+    .screen-title {
+      text-align: center; padding: 12px;
+      font-size: 11px; color: #999; letter-spacing: 2px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header {
+      border-bottom: 2px solid #333;
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header .logo { font-size: 15px; font-weight: bold; }
+    .header .nav-links { display: flex; gap: 12px; font-size: 12px; }
+    .header .nav-links a { color: #999; text-decoration: none; }
+    .header .nav-links a.current { color: #333; font-weight: bold; }
+
+    /* ===== History ===== */
+    .history-list { padding: 16px 20px; }
+
+    .history-item {
+      border: 2px solid #333; border-radius: 8px;
+      margin-bottom: 12px; overflow: hidden;
+    }
+
+    .history-meta {
+      padding: 8px 12px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #eee;
+      font-size: 11px; color: #999;
+    }
+
+    .history-negative {
+      padding: 12px; font-size: 13px; color: #666;
+      background: #f9f9f9;
+      border-bottom: 1px dashed #ddd;
+    }
+
+    .history-positive {
+      padding: 12px; font-size: 13px;
+    }
+
+    .history-actions {
+      padding: 6px 12px;
+      border-top: 1px solid #eee;
+      text-align: right;
+    }
+    .delete-btn {
+      font-size: 11px; color: #bbb; cursor: pointer;
+      border: 1px solid #ddd; border-radius: 4px;
+      padding: 3px 10px; background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wf-nav">
+  <span>WIREFRAME</span>
+  <a href="index.html">1. メイン</a>
+  <a href="login.html">2. ログイン</a>
+  <a href="history.html" class="active">3. 履歴</a>
+</div>
+
+<div class="frame">
+  <div class="screen-title">SCREEN 3 / 履歴</div>
+
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="nav-links">
+      <a href="index.html">変換</a>
+      <a href="history.html" class="current">履歴</a>
+      <a href="#">ログアウト</a>
+    </div>
+  </div>
+
+  <div class="history-list">
+
+    <div class="history-item">
+      <div class="history-meta">
+        <span>2026/03/06 14:30</span>
+      </div>
+      <div class="history-negative">
+        仕事でミスばかりして、自分には向いてないと思う...
+      </div>
+      <div class="history-positive">
+        はあ！？ミスばっかり？？それ「挑戦しまくってる」って読むんだよ！！
+      </div>
+      <div class="history-actions">
+        <button class="delete-btn">削除</button>
+      </div>
+    </div>
+
+    <div class="history-item">
+      <div class="history-meta">
+        <span>2026/03/05 10:15</span>
+      </div>
+      <div class="history-negative">
+        プレゼンが全然うまくいかなかった...
+      </div>
+      <div class="history-positive">
+        うまくいかなかった？いや「次うまくいくためのデータ収集」完了おめでとう！！
+      </div>
+      <div class="history-actions">
+        <button class="delete-btn">削除</button>
+      </div>
+    </div>
+
+    <div class="history-item">
+      <div class="history-meta">
+        <span>2026/03/04 18:45</span>
+      </div>
+      <div class="history-negative">
+        友達と比べて自分だけ成長してない気がする
+      </div>
+      <div class="history-positive">
+        比べてる時点で成長意欲バリバリじゃん！！その悔しさ、燃料にしろ！！
+      </div>
+      <div class="history-actions">
+        <button class="delete-btn">削除</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

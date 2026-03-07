@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern 3-1 - ミニマル × ブルーアクセント</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    .design-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+      padding: 10px 20px;
+      display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+      font-size: 12px; border-bottom: 1px solid #333;
+    }
+    .design-nav span { color: #666; font-weight: bold; letter-spacing: 1px; }
+    .design-nav a { color: #888; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
+    .design-nav a.active { background: #fff; color: #000; font-weight: bold; }
+    .design-nav a:hover { color: #fff; }
+
+    .phone {
+      max-width: 420px;
+      margin: 70px auto 40px;
+      background: #fff;
+      border-radius: 32px;
+      min-height: 720px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 2px 40px rgba(0,0,0,0.06);
+    }
+
+    .header {
+      padding: 20px 24px 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { font-size: 13px; font-weight: 500; color: #bbb; letter-spacing: 2px; }
+    .menu-line { width: 20px; height: 2px; background: #ccc; border-radius: 1px; }
+
+    .main {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 0 32px 48px;
+    }
+
+    .catchcopy {
+      font-size: 19px; font-weight: 700;
+      text-align: center; margin-bottom: 32px;
+      color: #222; line-height: 1.6; letter-spacing: 1px;
+    }
+    .catchcopy .accent { color: #3B82F6; }
+
+    .input-area {
+      background: #fafafa;
+      border: 2px solid #e0e0e0;
+      border-left: 4px solid #3B82F6;
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 140px;
+      font-size: 15px; color: #bbb; line-height: 1.6;
+    }
+
+    .btn {
+      margin-top: 16px; padding: 18px;
+      text-align: center; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      background: #3B82F6; color: #fff;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .btn:hover {
+      box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+      transform: translateY(-1px);
+    }
+
+    .pattern-label {
+      text-align: center; margin-top: 24px;
+      font-size: 11px; color: #ddd; letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="design-nav">
+  <span>PATTERN 3 VARIANTS</span>
+  <a href="pattern3-1.html" class="active">3-1 ブルー</a>
+  <a href="pattern3-2.html">3-2 パープル</a>
+  <a href="pattern3-3.html">3-3 グリーン</a>
+  <a href="pattern3-4.html">3-4 モノクロ強</a>
+  <a href="pattern3-5.html">3-5 インディゴ</a>
+</div>
+
+<div class="phone">
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-line"></div>
+  </div>
+  <div class="main">
+    <div class="catchcopy">モヤモヤを入れたら、<br><span class="accent">笑って戻れる。</span></div>
+    <div class="input-area">ここに書いてみて...</div>
+    <div class="btn">気持ち切り替える！</div>
+    <div class="pattern-label">3-1 / ミニマル × ブルーアクセント</div>
+  </div>
+</div>
+
+</body>
+</html>

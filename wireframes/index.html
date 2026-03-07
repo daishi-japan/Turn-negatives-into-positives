@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe - 入力画面</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .wf-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #222; color: #fff; padding: 12px 24px;
+      display: flex; gap: 24px; align-items: center;
+      font-size: 13px;
+    }
+    .wf-nav a { color: #aaa; text-decoration: none; }
+    .wf-nav a.active { color: #fff; font-weight: bold; }
+    .wf-nav span { color: #666; }
+
+    .frame {
+      max-width: 480px;
+      margin: 80px auto 40px;
+      background: #fff;
+      border: 2px solid #333;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-title {
+      text-align: center; padding: 12px;
+      font-size: 11px; color: #999; letter-spacing: 2px;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* ===== Minimal header ===== */
+    .header {
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header .logo { font-size: 14px; color: #999; }
+    .header .menu-icon {
+      width: 20px; height: 14px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer;
+    }
+    .header .menu-icon span {
+      display: block; height: 2px; background: #999; border-radius: 1px;
+    }
+
+    /* ===== Center content ===== */
+    .center-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 24px 40px;
+    }
+
+    /* ===== Textarea ===== */
+    .textarea-mock {
+      border: 2px solid #333; border-radius: 8px;
+      padding: 16px; min-height: 160px;
+      font-size: 15px; line-height: 1.6;
+      color: #bbb;
+    }
+
+    /* ===== Button ===== */
+    .btn-convert {
+      display: block; width: 100%;
+      padding: 18px; text-align: center;
+      border: 2px solid #333; border-radius: 8px;
+      font-size: 17px; font-weight: bold;
+      background: #333; color: #fff;
+      margin-top: 14px; cursor: pointer;
+    }
+
+    .annotation {
+      margin-top: 20px; font-size: 11px; color: #ccc;
+      font-style: italic; line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wf-nav">
+  <span>WIREFRAME</span>
+  <a href="index.html" class="active">1. 入力</a>
+  <a href="result.html">2. 結果</a>
+  <a href="login.html">3. ログイン</a>
+  <a href="history.html">4. 履歴</a>
+</div>
+
+<div class="frame">
+  <div class="screen-title">SCREEN 1 / 入力画面</div>
+
+  <!-- Minimal header -->
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Centered input area -->
+  <div class="center-content">
+    <div style="font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 16px;">
+      モヤモヤを入れたら、笑って戻れる。
+    </div>
+    <div class="textarea-mock" style="color: #ccc;">
+      ここに書いてみて...
+    </div>
+    <div class="btn-convert">気持ち切り替える！</div>
+
+    <div class="annotation">
+      ※ 画面中央にテキスト欄+ボタンだけの潔い構成<br>
+      ※ ラベル無し。プレースホルダーで導く<br>
+      ※ ナビはハンバーガーメニューに格納
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
