@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives/wireframes/designs && grep -l \"気持ち切り替える\" mono*.html)",
+      "Bash(cd /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives && npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --use-npm --no-turbopack --import-alias \"@/*\" 2>&1)",
+      "Bash(cd /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives && npx create-next-app@latest temp-app --typescript --tailwind --eslint --app --src-dir --use-npm --no-turbopack --import-alias \"@/*\" 2>&1)",
+      "Bash(echo '{}' | npx create-next-app@latest temp-app --typescript --tailwind --eslint --app --src-dir --use-npm --no-turbopack --import-alias \"@/*\" --no-react-compiler 2>&1 || true)",
+      "Bash(npm install @supabase/supabase-js @supabase/ssr @google/generative-ai 2>&1)",
+      "Bash(npx shadcn@latest init -d 2>&1)"
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mono 3 - タイポグラフィ主役</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f5f5f5;
+      color: #111;
+    }
+
+    .design-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #000; padding: 10px 20px;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      font-size: 12px;
+    }
+    .design-nav span { color: #555; font-weight: bold; letter-spacing: 1px; }
+    .design-nav a { color: #666; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
+    .design-nav a.active { background: #fff; color: #000; font-weight: bold; }
+    .design-nav a:hover { color: #fff; }
+
+    .phone {
+      max-width: 420px;
+      margin: 70px auto 40px;
+      background: #fff;
+      border-radius: 32px;
+      min-height: 720px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 2px 40px rgba(0,0,0,0.05);
+    }
+
+    .header {
+      padding: 20px 24px 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { font-size: 11px; font-weight: 300; color: #bbb; letter-spacing: 4px; }
+    .menu-line { width: 20px; height: 1px; background: #ccc; }
+
+    .main {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 0 32px 48px;
+    }
+
+    .catchcopy {
+      font-size: 28px; font-weight: 900;
+      text-align: center; margin-bottom: 40px;
+      color: #000; line-height: 1.5;
+      letter-spacing: -1px;
+    }
+    .catchcopy .sub {
+      display: block;
+      font-size: 14px; font-weight: 300;
+      color: #999; letter-spacing: 2px;
+      margin-top: 8px;
+    }
+
+    .input-area {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #000;
+      padding: 16px 4px;
+      min-height: 120px;
+      font-size: 15px; color: #ccc; line-height: 1.6;
+    }
+
+    .btn {
+      margin-top: 20px; padding: 16px;
+      text-align: center;
+      border: none; border-radius: 0;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      background: transparent; color: #000;
+      letter-spacing: 4px;
+      border-bottom: 2px solid #000;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #000; color: #fff; }
+
+    .pattern-label {
+      text-align: center; margin-top: 32px;
+      font-size: 11px; color: #ddd; letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="design-nav">
+  <span>MONO</span>
+  <a href="mono1.html">1 シャープ</a>
+  <a href="mono2.html">2 ソフト</a>
+  <a href="mono3.html" class="active">3 タイポ</a>
+  <a href="mono4.html">4 カード</a>
+  <a href="mono5.html">5 反転</a>
+</div>
+
+<div class="phone">
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-line"></div>
+  </div>
+  <div class="main">
+    <div class="catchcopy">
+      笑って戻れる。
+      <span class="sub">モヤモヤを入れるだけ</span>
+    </div>
+    <div class="input-area">ここに書いてみて...</div>
+    <div class="btn">気持ちを切り替える</div>
+    <div class="pattern-label">MONO 3 / タイポグラフィ主役 — 文字の力だけで構成、ボーダーレス</div>
+  </div>
+</div>
+
+</body>
+</html>

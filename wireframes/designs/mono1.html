@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mono 1 - シャープエッジ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #e8e8e8;
+      color: #111;
+    }
+
+    .design-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #000; padding: 10px 20px;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      font-size: 12px;
+    }
+    .design-nav span { color: #555; font-weight: bold; letter-spacing: 1px; }
+    .design-nav a { color: #666; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
+    .design-nav a.active { background: #fff; color: #000; font-weight: bold; }
+    .design-nav a:hover { color: #fff; }
+
+    .phone {
+      max-width: 420px;
+      margin: 70px auto 40px;
+      background: #fff;
+      border-radius: 0;
+      min-height: 720px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      border: 2px solid #000;
+    }
+
+    .header {
+      padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #000;
+    }
+    .logo { font-size: 12px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; }
+    .menu-line { width: 24px; height: 2px; background: #000; }
+
+    .main {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 0 32px 48px;
+    }
+
+    .catchcopy {
+      font-size: 22px; font-weight: 900;
+      text-align: left; margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .catchcopy .accent {
+      display: inline-block;
+      background: #000; color: #fff;
+      padding: 2px 8px;
+    }
+
+    .input-area {
+      border: 2px solid #000;
+      padding: 20px;
+      min-height: 140px;
+      font-size: 15px; color: #bbb; line-height: 1.6;
+    }
+
+    .btn {
+      margin-top: 20px; padding: 18px;
+      text-align: center;
+      border: 2px solid #000; border-top: none;
+      font-size: 15px; font-weight: 900; cursor: pointer;
+      background: #000; color: #fff;
+      letter-spacing: 2px;
+    }
+    .btn:hover { background: #333; }
+
+    .pattern-label {
+      text-align: center; margin-top: 32px;
+      font-size: 11px; color: #ccc; letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="design-nav">
+  <span>MONO</span>
+  <a href="mono1.html" class="active">1 シャープ</a>
+  <a href="mono2.html">2 ソフト</a>
+  <a href="mono3.html">3 タイポ</a>
+  <a href="mono4.html">4 カード</a>
+  <a href="mono5.html">5 反転</a>
+</div>
+
+<div class="phone">
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-line"></div>
+  </div>
+  <div class="main">
+    <div class="catchcopy">モヤモヤを入れたら、<br><span class="accent">笑って戻れる。</span></div>
+    <div class="input-area">ここに書いてみて...</div>
+    <div class="btn">気持ちを切り替える</div>
+    <div class="pattern-label">MONO 1 / シャープエッジ — 角丸なし、直線的、力強い</div>
+  </div>
+</div>
+
+</body>
+</html>

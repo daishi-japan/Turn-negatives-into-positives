@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mono 2 - ソフトモノクロ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f0f0f0;
+      color: #222;
+    }
+
+    .design-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #000; padding: 10px 20px;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      font-size: 12px;
+    }
+    .design-nav span { color: #555; font-weight: bold; letter-spacing: 1px; }
+    .design-nav a { color: #666; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
+    .design-nav a.active { background: #fff; color: #000; font-weight: bold; }
+    .design-nav a:hover { color: #fff; }
+
+    .phone {
+      max-width: 420px;
+      margin: 70px auto 40px;
+      background: #fafafa;
+      border-radius: 32px;
+      min-height: 720px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+    }
+
+    .header {
+      padding: 20px 24px 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { font-size: 13px; font-weight: 500; color: #ccc; letter-spacing: 2px; }
+    .menu-line { width: 20px; height: 2px; background: #ddd; border-radius: 1px; }
+
+    .main {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 0 32px 48px;
+    }
+
+    .catchcopy {
+      font-size: 19px; font-weight: 700;
+      text-align: center; margin-bottom: 32px;
+      color: #444; line-height: 1.7;
+    }
+    .catchcopy .accent {
+      color: #111; font-weight: 700;
+    }
+
+    .input-area {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 22px;
+      min-height: 140px;
+      font-size: 15px; color: #ccc; line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .btn {
+      margin-top: 20px; padding: 18px;
+      text-align: center;
+      border: none; border-radius: 20px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      background: #333; color: #fff;
+    }
+    .btn:hover { background: #555; }
+
+    .pattern-label {
+      text-align: center; margin-top: 32px;
+      font-size: 11px; color: #ddd; letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="design-nav">
+  <span>MONO</span>
+  <a href="mono1.html">1 シャープ</a>
+  <a href="mono2.html" class="active">2 ソフト</a>
+  <a href="mono3.html">3 タイポ</a>
+  <a href="mono4.html">4 カード</a>
+  <a href="mono5.html">5 反転</a>
+</div>
+
+<div class="phone">
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="menu-line"></div>
+  </div>
+  <div class="main">
+    <div class="catchcopy">モヤモヤを入れたら、<br><span class="accent">笑って戻れる。</span></div>
+    <div class="input-area">ここに書いてみて...</div>
+    <div class="btn">気持ちを切り替える</div>
+    <div class="pattern-label">MONO 2 / ソフトモノクロ — 丸角大きめ、影で浮遊感、やさしい</div>
+  </div>
+</div>
+
+</body>
+</html>
