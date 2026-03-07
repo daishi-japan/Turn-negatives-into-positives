@@ -157,8 +157,41 @@ export function ConversionForm() {
         </span>
       </h1>
 
+      <div className="relative">
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder={"例：上司に理不尽に怒られた\n例：プレゼンで頭が真っ白になった\n例：月曜日が来るのが怖い"}
+          maxLength={MAX_LENGTH}
+          className="w-full border-2 border-black p-5 min-h-[140px] text-[15px] leading-relaxed resize-none focus:outline-none placeholder:text-gray-300"
+        />
+        {text && (
+          <button
+            onClick={handleClearDraft}
+            className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-gray-300 hover:text-black text-sm cursor-pointer"
+            title="クリア"
+          >
+            ×
+          </button>
+        )}
+      </div>
+
+      <div className="flex justify-end mt-1">
+        <span
+          className={`text-xs ${
+            isOverLimit
+              ? "text-red-500 font-bold"
+              : isNearLimit
+              ? "text-gray-500"
+              : "text-gray-400"
+          }`}
+        >
+          {charCount}/{MAX_LENGTH}
+        </span>
+      </div>
+
       {/* Tone selection */}
-      <div className="flex gap-2 flex-wrap mb-4">
+      <div className="flex gap-2 flex-wrap mt-3 mb-3">
         {TONES.map((t) => (
           <button
             key={t.key}
@@ -195,39 +228,6 @@ export function ConversionForm() {
             {f.label}
           </button>
         ))}
-      </div>
-
-      <div className="relative">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="ここに書いてみて..."
-          maxLength={MAX_LENGTH}
-          className="w-full border-2 border-black p-5 min-h-[140px] text-[15px] leading-relaxed resize-none focus:outline-none placeholder:text-gray-300"
-        />
-        {text && (
-          <button
-            onClick={handleClearDraft}
-            className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-gray-300 hover:text-black text-sm cursor-pointer"
-            title="クリア"
-          >
-            ×
-          </button>
-        )}
-      </div>
-
-      <div className="flex justify-end mt-1">
-        <span
-          className={`text-xs ${
-            isOverLimit
-              ? "text-red-500 font-bold"
-              : isNearLimit
-              ? "text-gray-500"
-              : "text-gray-400"
-          }`}
-        >
-          {charCount}/{MAX_LENGTH}
-        </span>
       </div>
 
       {error && (
