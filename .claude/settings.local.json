@@ -6,7 +6,31 @@
       "Bash(cd /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives && npx create-next-app@latest temp-app --typescript --tailwind --eslint --app --src-dir --use-npm --no-turbopack --import-alias \"@/*\" 2>&1)",
       "Bash(echo '{}' | npx create-next-app@latest temp-app --typescript --tailwind --eslint --app --src-dir --use-npm --no-turbopack --import-alias \"@/*\" --no-react-compiler 2>&1 || true)",
       "Bash(npm install @supabase/supabase-js @supabase/ssr @google/generative-ai 2>&1)",
-      "Bash(npx shadcn@latest init -d 2>&1)"
+      "Bash(npx shadcn@latest init -d 2>&1)",
+      "Bash(npx shadcn@latest add textarea card input tabs -y 2>&1)",
+      "Bash(npm run build 2>&1 | tail -30)",
+      "Bash(npx tsc --noEmit 2>&1)",
+      "Bash(npm run dev 2>&1)",
+      "Bash(npm run build 2>&1 | tail -20)",
+      "Bash(git -C /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives status -s)",
+      "Bash(git -C /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives log --oneline -5)",
+      "Bash(git -C /Users/lease-emp-daishi-naganuma/Desktop/Turn-negatives-into-positives diff --staged)",
+      "Bash(git add middleware.ts src/app/layout.tsx src/app/page.tsx src/app/api/ src/app/history/ src/app/login/ src/app/result/ src/components/conversion-form.tsx src/components/conversion-result.tsx src/components/header.tsx src/components/ui/card.tsx src/components/ui/input.tsx src/components/ui/tabs.tsx src/components/ui/textarea.tsx src/lib/gemini.ts src/lib/rate-limit.ts src/lib/supabase/ src/lib/use-conversion-result.ts supabase-schema.sql supabase-add-favorite.sql)",
+      "Bash(git push origin main 2>&1)",
+      "Bash(gh auth status 2>&1)",
+      "Bash(npm run build 2>&1 | tail -15)",
+      "Bash(npx next build 2>&1 | tail -20)",
+      "Bash(npm run dev)",
+      "Bash(which vercel 2>/dev/null; vercel --version 2>/dev/null)",
+      "Bash(npm i -g vercel 2>&1 | tail -5)",
+      "Bash(git add src/app/login/page.tsx src/app/auth/callback/route.ts && git commit -m \"$\\(cat <<'EOF'\nfeat: Google OAuth ログインを追加\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(vercel --yes 2>&1)",
+      "Bash(vercel login 2>&1)",
+      "Bash(vercel --yes --prod 2>&1)",
+      "Bash(vercel env ls 2>&1)",
+      "Bash(vercel --prod --yes 2>&1)",
+      "Bash(vercel logs turn-negatives-into-positives.vercel.app --limit 20 2>&1)",
+      "Bash(vercel logs turn-negatives-into-positives.vercel.app 2>&1 | head -40)"
     ]
   }
 }
