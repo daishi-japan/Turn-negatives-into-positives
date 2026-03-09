@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header";
+import { BottomNav } from "@/components/bottom-nav";
 import { createClient } from "@/lib/supabase/client";
 import { useConversionResult } from "@/lib/use-conversion-result";
 
@@ -41,6 +42,7 @@ export default function HistoryPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [selectedTones, setSelectedTones] = useState<Record<string, string>>({});
   const [tab, setTab] = useState<"history" | "favorites">("history");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const supabase = createClient();
   const router = useRouter();
   const { setDraft, setDraftTone } = useConversionResult();
@@ -60,9 +62,13 @@ export default function HistoryPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    await supabase.from("conversions").delete().eq("id", id);
-    setConversions((prev) => prev.filter((c) => c.id !== id));
-    if (expandedId === id) setExpandedId(null);
+    setDeletingId(id);
+    setTimeout(async () => {
+      await supabase.from("conversions").delete().eq("id", id);
+      setConversions((prev) => prev.filter((c) => c.id !== id));
+      if (expandedId === id) setExpandedId(null);
+      setDeletingId(null);
+    }, 400);
   };
 
   const toggleExpand = (id: string) => {
@@ -97,150 +103,216 @@ export default function HistoryPage() {
     router.push("/");
   };
 
+  const filtered = tab === "favorites"
+    ? conversions.filter((c) => c.is_favorite)
+    : conversions;
+
   return (
-    <div className="min-h-screen flex flex-col max-w-[480px] mx-auto bg-white border-x-2 border-black">
+    <div className="min-h-screen flex flex-col max-w-[420px] mx-auto bg-[#fafafa] border-x-[3px] border-[#0a0a0a] shadow-[8px_8px_0_#0a0a0a] relative">
       <Header />
+
       {/* Tab switcher */}
-      <div className="flex border-b-2 border-black">
+      <div className="flex border-b-[3px] border-[#0a0a0a]">
         <button
           onClick={() => setTab("history")}
-          className={`flex-1 py-3 text-sm font-bold text-center cursor-pointer ${
-            tab === "history" ? "bg-black text-white" : "text-gray-400 hover:text-black"
+          className={`flex-1 py-3 text-sm font-bold text-center cursor-pointer transition-all duration-250 ${
+            tab === "history" ? "bg-[#0a0a0a] text-white" : "text-[#999] hover:text-[#0a0a0a]"
           }`}
+          style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
         >
           履歴
         </button>
         <button
           onClick={() => setTab("favorites")}
-          className={`flex-1 py-3 text-sm font-bold text-center cursor-pointer ${
-            tab === "favorites" ? "bg-black text-white" : "text-gray-400 hover:text-black"
+          className={`flex-1 py-3 text-sm font-bold text-center cursor-pointer border-l-[3px] border-[#0a0a0a] transition-all duration-250 ${
+            tab === "favorites" ? "bg-[#0a0a0a] text-white" : "text-[#999] hover:text-[#0a0a0a]"
           }`}
+          style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
         >
           お気に入り
         </button>
       </div>
 
-      <div className="flex-1 px-5 py-4">
+      <div className="flex-1 px-5 py-6 overflow-y-auto premium-scroll">
         {loading ? (
-          <p className="text-center text-gray-400 mt-20">読み込み中...</p>
+          <div className="flex flex-col items-center justify-center mt-20">
+            <div className="loading-bar" />
+            <p
+              className="mt-4 text-[10px] tracking-[3px] text-[#999]"
+              style={{ fontFamily: "var(--font-dm-mono)" }}
+            >
+              LOADING
+            </p>
+          </div>
         ) : conversions.length === 0 ? (
-          <div className="text-center mt-20">
-            <p className="text-gray-400 mb-6">
+          <div className="text-center mt-20 stagger">
+            <p className="text-[#999] mb-6">
               まだモヤモヤを吐き出してないみたい
             </p>
             <a
               href="/"
-              className="inline-block border-2 border-black px-6 py-3 text-sm font-bold hover:bg-black hover:text-white"
+              className="btn-brutalist inline-block border-[3px] border-[#0a0a0a] px-6 py-3 text-sm font-bold"
             >
               変換してみる
             </a>
           </div>
-        ) : (() => {
-          const filtered = tab === "favorites"
-            ? conversions.filter((c) => c.is_favorite)
-            : conversions;
-          if (filtered.length === 0) {
-            return (
-              <div className="text-center mt-20">
-                <p className="text-gray-400">お気に入りはまだありません</p>
+        ) : (
+          <div className="stagger">
+            {/* Header with count */}
+            <div className="flex justify-between items-baseline mb-6">
+              <div className="text-[22px] font-black tracking-[-0.5px]">変換履歴</div>
+              <div
+                className="text-[11px] text-[#999] tracking-[1px]"
+                style={{ fontFamily: "var(--font-dm-mono)" }}
+              >
+                {filtered.length} RECORDS
               </div>
-            );
-          }
-          return filtered.map((c) => {
-            const isExpanded = expandedId === c.id;
-            const selectedTone = selectedTones[c.id] || "";
-            return (
-              <div key={c.id} className="border-2 border-black mb-3">
-                <button
-                  onClick={() => toggleExpand(c.id)}
-                  className="w-full px-3 py-2.5 flex justify-between items-center cursor-pointer hover:bg-gray-50 text-left"
-                >
-                  <span className="text-[13px] text-gray-500 truncate flex-1 mr-3">
-                    {c.negative_text}
-                  </span>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleFavorite(c.id);
-                      }}
-                      className="p-0.5 cursor-pointer"
-                      title="お気に入り"
+            </div>
+
+            {filtered.length === 0 ? (
+              <div className="text-center mt-12">
+                <p className="text-[#999]">お気に入りはまだありません</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {filtered.map((c) => {
+                  const isExpanded = expandedId === c.id;
+                  const selectedTone = selectedTones[c.id] || "";
+                  const isDeleting = deletingId === c.id;
+                  return (
+                    <div
+                      key={c.id}
+                      className={`border-[3px] border-[#0a0a0a] overflow-hidden transition-all duration-200 ${
+                        isDeleting
+                          ? "history-card-deleting"
+                          : "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[4px_4px_0_#0a0a0a]"
+                      }`}
+                      style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill={c.is_favorite ? "black" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                      </svg>
-                    </button>
-                    <span className="text-[10px] border border-black px-1.5 py-0.5 font-bold">
-                      {TONE_LABELS[c.tone] || c.tone}
-                    </span>
-                    <span className="text-gray-300 text-xs">
-                      {isExpanded ? "▲" : "▼"}
-                    </span>
-                  </div>
-                </button>
-
-                {isExpanded && (
-                  <>
-                    <div className="px-3 py-2 border-t border-gray-200 text-[11px] text-gray-400">
-                      {new Date(c.created_at).toLocaleDateString("ja-JP", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                    <div className="px-3 py-3 text-[13px] text-gray-500 bg-[#f9f9f9] border-t border-dashed border-gray-300">
-                      {c.negative_text}
-                    </div>
-                    <div className="text-center text-gray-300 text-sm py-1">↓</div>
-                    <div className="px-3 py-3 text-[13px] font-medium whitespace-pre-line">
-                      {c.positive_text}
-                    </div>
-
-                    {/* Tone selection for reuse */}
-                    <div className="px-3 py-2 border-t border-gray-200">
-                      <p className="text-[11px] text-gray-400 mb-2">トーンを選んで再入力：</p>
-                      <div className="flex gap-1.5 flex-wrap">
-                        {TONES.map((t) => (
+                      {/* Card header */}
+                      <div className="px-4 py-3 flex justify-between items-center border-b-[1.5px] border-[#0a0a0a]">
+                        <span
+                          className="text-[10px] text-[#999] tracking-[1px]"
+                          style={{ fontFamily: "var(--font-dm-mono)" }}
+                        >
+                          {new Date(c.created_at).toLocaleDateString("ja-JP", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }).replace(/\//g, ".")}
+                          {" — "}
+                          {new Date(c.created_at).toLocaleTimeString("ja-JP", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                        <div className="flex items-center gap-2">
                           <button
-                            key={t.key}
-                            onClick={() => handleSelectTone(c.id, t.key)}
-                            className={`border px-2.5 py-1 text-[11px] cursor-pointer ${
-                              selectedTone === t.key
-                                ? "border-black bg-black text-white"
-                                : "border-gray-300 text-gray-500 hover:border-black hover:text-black"
-                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleFavorite(c.id);
+                            }}
+                            className="p-0.5 cursor-pointer"
+                            title="お気に入り"
                           >
-                            {t.label}
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill={c.is_favorite ? "black" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
                           </button>
-                        ))}
+                          <button
+                            onClick={() => handleDelete(c.id)}
+                            className="w-7 h-7 border-2 border-[#c0c0c0] bg-[#fafafa] cursor-pointer flex items-center justify-center text-[14px] text-[#999] hover:border-[#0a0a0a] hover:text-[#0a0a0a] hover:bg-[#f0f0f0] transition-all duration-200"
+                            style={{ fontFamily: "var(--font-dm-mono)" }}
+                          >
+                            ×
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Actions */}
-                    <div className="px-3 py-2 border-t border-gray-200 flex justify-between">
-                      <button
-                        onClick={() => handleReuse(c.negative_text, c.id)}
-                        className="text-[11px] border border-gray-300 px-3 py-1 font-bold hover:border-black hover:text-black cursor-pointer text-gray-500"
-                      >
-                        再入力
-                      </button>
-                      <button
-                        onClick={() => handleDelete(c.id)}
-                        className="text-[11px] text-gray-400 border border-gray-300 px-2 py-1 hover:border-black hover:text-black cursor-pointer"
-                      >
-                        削除
-                      </button>
+                      {/* BEFORE section */}
+                      <div className="relative px-4 py-3.5 text-[12px] text-[#666] leading-[1.6] border-b border-dashed border-[#e0e0e0]">
+                        <span
+                          className="absolute top-3.5 right-4 text-[9px] text-[#c0c0c0] tracking-[1px]"
+                          style={{ fontFamily: "var(--font-dm-mono)" }}
+                        >
+                          B
+                        </span>
+                        <button
+                          onClick={() => toggleExpand(c.id)}
+                          className="w-full text-left cursor-pointer truncate pr-6"
+                        >
+                          {c.negative_text}
+                        </button>
+                      </div>
+
+                      {/* AFTER section */}
+                      <div className="relative px-4 py-4 text-[14px] font-bold leading-[1.7] bg-[#0a0a0a] text-white">
+                        <span
+                          className="absolute top-4 right-4 text-[9px] text-[#444] tracking-[1px]"
+                          style={{ fontFamily: "var(--font-dm-mono)" }}
+                        >
+                          A
+                        </span>
+                        <p className={`whitespace-pre-line pr-4 ${!isExpanded ? "line-clamp-2" : ""}`}>
+                          {c.positive_text}
+                        </p>
+                      </div>
+
+                      {/* Expanded details */}
+                      {isExpanded && (
+                        <>
+                          {/* Tone for reuse */}
+                          <div className="px-4 py-3 border-t-[1.5px] border-[#0a0a0a]">
+                            <p
+                              className="text-[10px] text-[#999] mb-2 tracking-[2px]"
+                              style={{ fontFamily: "var(--font-dm-mono)" }}
+                            >
+                              TONE
+                            </p>
+                            <div className="flex gap-1.5 flex-wrap">
+                              {TONES.map((t) => (
+                                <button
+                                  key={t.key}
+                                  onClick={() => handleSelectTone(c.id, t.key)}
+                                  className={`border-2 px-2.5 py-1 text-[11px] cursor-pointer transition-all duration-200 ${
+                                    selectedTone === t.key
+                                      ? "border-[#0a0a0a] bg-[#0a0a0a] text-white"
+                                      : "border-[#c0c0c0] text-[#666] hover:border-[#0a0a0a] hover:text-[#0a0a0a]"
+                                  }`}
+                                  style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
+                                >
+                                  {t.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="px-4 py-3 border-t-[1.5px] border-[#e0e0e0] flex justify-between">
+                            <button
+                              onClick={() => handleReuse(c.negative_text, c.id)}
+                              className="btn-brutalist text-[11px] border-2 border-[#0a0a0a] px-4 py-1.5 font-bold cursor-pointer"
+                            >
+                              再入力
+                            </button>
+                            <span
+                              className="text-[10px] text-[#999] flex items-center tracking-[1px]"
+                              style={{ fontFamily: "var(--font-dm-mono)" }}
+                            >
+                              {TONE_LABELS[c.tone] || c.tone}
+                            </span>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </>
-                )}
+                  );
+                })}
               </div>
-            );
-          });
-        })()}
+            )}
+          </div>
+        )}
       </div>
+      <BottomNav />
     </div>
   );
 }

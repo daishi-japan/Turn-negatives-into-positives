@@ -1,78 +1,126 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
+
+const NAV_LINKS = [
+  { index: "01", label: "変換", path: "/" },
+  { index: "02", label: "結果", path: "/result" },
+  { index: "03", label: "ログイン", path: "/login" },
+  { index: "04", label: "履歴", path: "/history" },
+];
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
-  // メニュー外クリックで閉じる
   useEffect(() => {
-    if (!menuOpen) return;
-    const handleClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Prevent body scroll when overlay is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
     };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
   }, [menuOpen]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setMenuOpen(false);
     router.push("/login");
   };
 
+  const handleNavigate = (path: string) => {
+    setMenuOpen(false);
+    router.push(path);
+  };
+
+  // Build nav links based on auth state
+  const navLinks = NAV_LINKS.filter((link) => {
+    // Hide "ログイン" when logged in
+    if (link.path === "/login" && user) return false;
+    return true;
+  });
+
   return (
-    <header className="border-b-2 border-black px-6 py-4 flex justify-between items-center">
-      <button
-        onClick={() => router.push("/")}
-        className="text-xs font-black tracking-[4px] cursor-pointer"
-      >
-        モヤポジ
-      </button>
-      <div className="relative" ref={menuRef}>
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="w-6 h-4 flex flex-col justify-between cursor-pointer"
-        >
-          <span className="block h-[2px] bg-black" />
-          <span className="block h-[2px] bg-black" />
-          <span className="block h-[2px] bg-black" />
-        </button>
-        {menuOpen && (
-          <div className="absolute right-0 top-8 border-2 border-black bg-white z-50 min-w-[120px]">
-            <button
-              onClick={() => {
-                router.push("/");
-                setMenuOpen(false);
-              }}
-              className="block w-full text-left px-4 py-3 text-sm font-bold hover:bg-black hover:text-white border-b border-black cursor-pointer"
+    <>
+      {/* Overlay Navigation */}
+      <div className={`nav-overlay ${menuOpen ? "open" : ""}`}>
+        {navLinks.map((link, i) => (
+          <a
+            key={link.path}
+            onClick={() => handleNavigate(link.path)}
+          >
+            <span
+              className="text-[12px] font-normal text-[#666] min-w-[28px]"
+              style={{ fontFamily: "var(--font-dm-mono)" }}
             >
-              変換
-            </button>
-            <button
-              onClick={() => {
-                router.push("/history");
-                setMenuOpen(false);
-              }}
-              className="block w-full text-left px-4 py-3 text-sm font-bold hover:bg-black hover:text-white border-b border-black cursor-pointer"
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            {link.label}
+          </a>
+        ))}
+        {/* Auth action: login or logout */}
+        {user ? (
+          <a onClick={handleLogout}>
+            <span
+              className="text-[12px] font-normal text-[#666] min-w-[28px]"
+              style={{ fontFamily: "var(--font-dm-mono)" }}
             >
-              履歴
-            </button>
-            <button
-              onClick={handleLogout}
-              className="block w-full text-left px-4 py-3 text-sm font-bold hover:bg-black hover:text-white cursor-pointer"
+              {String(navLinks.length + 1).padStart(2, "0")}
+            </span>
+            ログアウト
+          </a>
+        ) : (
+          <a onClick={() => handleNavigate("/login")}>
+            <span
+              className="text-[12px] font-normal text-[#666] min-w-[28px]"
+              style={{ fontFamily: "var(--font-dm-mono)" }}
             >
-              ログアウト
-            </button>
-          </div>
+              {String(navLinks.length + 1).padStart(2, "0")}
+            </span>
+            ログイン
+          </a>
         )}
       </div>
-    </header>
+
+      {/* Header Bar */}
+      <header className="border-b-[3px] border-[#0a0a0a] px-6 py-[18px] flex justify-between items-center relative z-50 bg-[#fafafa] shrink-0">
+        <button
+          onClick={() => handleNavigate("/")}
+          className="text-[11px] font-black tracking-[6px] uppercase cursor-pointer relative group"
+        >
+          ネガポジ変換
+          <span className="absolute bottom-[-2px] left-0 w-full h-[2px] bg-[#0a0a0a] scale-x-0 origin-left transition-transform duration-400 group-hover:scale-x-100" style={{ transitionTimingFunction: "var(--ease-out-expo)" }} />
+        </button>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className={`w-7 h-5 flex flex-col justify-between cursor-pointer relative z-[60] ${menuOpen ? "hamburger-active" : ""}`}
+        >
+          <span className="hamburger-line" />
+          <span className="hamburger-line" />
+          <span className="hamburger-line" />
+        </button>
+      </header>
+    </>
   );
 }

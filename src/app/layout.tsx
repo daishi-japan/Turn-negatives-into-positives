@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP } from "next/font/google";
+import { Noto_Sans_JP, DM_Mono } from "next/font/google";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
   subsets: ["latin"],
   weight: ["300", "500", "700", "900"],
+});
+
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${notoSansJP.className} antialiased`}>
+      <body className={`${notoSansJP.className} ${dmMono.variable} antialiased`}>
         {children}
       </body>
     </html>

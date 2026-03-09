@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ネガポジ変換 — Mono 1 Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #fafafa;
+      --gray-100: #f0f0f0;
+      --gray-200: #e0e0e0;
+      --gray-300: #c0c0c0;
+      --gray-400: #999;
+      --gray-500: #666;
+      --gray-600: #444;
+      --border: 3px solid var(--black);
+      --border-thin: 1.5px solid var(--black);
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *::selection { background: var(--black); color: var(--white); }
+
+    body {
+      font-family: var(--font-body);
+      background: #d4d4d4;
+      color: var(--black);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Phone Frame ─── */
+    .phone {
+      width: 100%;
+      max-width: 420px;
+      min-height: 812px;
+      background: var(--white);
+      border: var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 8px 8px 0 var(--black);
+    }
+
+    /* ─── Header ─── */
+    .header {
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: var(--border);
+      position: relative;
+      z-index: 50;
+      background: var(--white);
+      flex-shrink: 0;
+    }
+
+    .logo {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--black);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+
+    .logo:hover::after {
+      transform: scaleX(1);
+    }
+
+    .hamburger {
+      width: 28px;
+      height: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 60;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2.5px;
+      background: var(--black);
+      transition: all 0.4s var(--ease-out-expo);
+      transform-origin: center;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(8.75px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-8.75px) rotate(-45deg);
+    }
+
+    /* ─── Mobile Nav Overlay ─── */
+    .nav-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--black);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 32px;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.6s var(--ease-out-expo);
+    }
+
+    .nav-overlay.open {
+      clip-path: inset(0 0 0 0);
+    }
+
+    .nav-overlay a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 28px;
+      font-weight: 900;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.4s, transform 0.4s var(--ease-out-expo), color 0.2s;
+    }
+
+    .nav-overlay.open a {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .nav-overlay.open a:nth-child(1) { transition-delay: 0.15s; }
+    .nav-overlay.open a:nth-child(2) { transition-delay: 0.2s; }
+    .nav-overlay.open a:nth-child(3) { transition-delay: 0.25s; }
+    .nav-overlay.open a:nth-child(4) { transition-delay: 0.3s; }
+
+    .nav-overlay a:hover { color: var(--gray-400); }
+
+    .nav-overlay a .nav-index {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-500);
+      min-width: 28px;
+    }
+
+    /* ─── Content Area ─── */
+    .content {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      padding: 32px 28px 40px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+      overflow-y: auto;
+    }
+
+    .screen.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    /* ─── Screen 1: Input ─── */
+    .screen-input { justify-content: center; }
+
+    .catchcopy {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      letter-spacing: -0.5px;
+    }
+
+    .catchcopy .accent {
+      display: inline;
+      background: var(--black);
+      color: var(--white);
+      padding: 3px 10px 5px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .textarea-wrap {
+      border: var(--border);
+      position: relative;
+      transition: box-shadow 0.3s var(--ease-out-expo);
+    }
+
+    .textarea-wrap:focus-within {
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .textarea-wrap textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 20px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--black);
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: vertical;
+    }
+
+    .textarea-wrap textarea::placeholder {
+      color: var(--gray-300);
+      font-weight: 300;
+    }
+
+    .char-count {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--gray-300);
+      transition: color 0.2s;
+    }
+
+    .char-count.has-text { color: var(--gray-500); }
+
+    .btn-convert {
+      margin-top: 20px;
+      padding: 20px;
+      text-align: center;
+      border: var(--border);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      background: var(--black);
+      color: var(--white);
+      letter-spacing: 3px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-convert::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-convert:hover::before { left: 100%; }
+
+    .btn-convert:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .btn-convert:active {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
+
+    /* ─── Screen 2: Result ─── */
+    .screen-result { justify-content: flex-start; padding-top: 28px; }
+
+    .result-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gray-400);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .original-text {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gray-500);
+      line-height: 1.7;
+      padding: 16px 20px;
+      border: var(--border-thin);
+      border-style: dashed;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .original-text::before {
+      content: 'BEFORE';
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      background: var(--white);
+      padding: 0 6px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--gray-400);
+    }
+
+    .converted-text {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.8;
+      padding: 24px;
+      border: var(--border);
+      background: var(--black);
+      color: var(--white);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .converted-text::before {
+      content: 'AFTER';
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      background: var(--black);
+      padding: 0 6px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--gray-500);
+    }
+
+    .tone-section {
+      margin-bottom: 28px;
+    }
+
+    .tone-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--gray-400);
+      margin-bottom: 12px;
+    }
+
+    .tone-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tone-chip {
+      padding: 8px 16px;
+      border: 2px solid var(--black);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--white);
+      color: var(--black);
+      letter-spacing: 1px;
+      transition: all 0.2s var(--ease-out-expo);
+    }
+
+    .tone-chip:hover,
+    .tone-chip.active {
+      background: var(--black);
+      color: var(--white);
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 var(--black);
+    }
+
+    .tone-chip:active {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
+
+    .btn-retry {
+      padding: 18px;
+      text-align: center;
+      border: var(--border);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--white);
+      color: var(--black);
+      letter-spacing: 2px;
+      margin-top: auto;
+      transition: all 0.2s var(--ease-out-expo);
+    }
+
+    .btn-retry:hover {
+      background: var(--gray-100);
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .btn-retry:active {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
+
+    /* ─── Screen 3: Login ─── */
+    .screen-login { justify-content: center; }
+
+    .login-header {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .login-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border: var(--border);
+      margin-bottom: 28px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 1px;
+      background: var(--white);
+      color: var(--gray-400);
+      border: none;
+      font-family: var(--font-body);
+      transition: all 0.25s var(--ease-out-expo);
+    }
+
+    .auth-tab + .auth-tab {
+      border-left: var(--border);
+    }
+
+    .auth-tab.active {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .auth-form { display: flex; flex-direction: column; gap: 0; }
+
+    .form-field {
+      border: var(--border);
+      margin-top: -3px;
+      position: relative;
+    }
+
+    .form-field:first-child { margin-top: 0; }
+
+    .form-field label {
+      position: absolute;
+      top: -9px;
+      left: 14px;
+      background: var(--white);
+      padding: 0 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--gray-400);
+      text-transform: uppercase;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 16px 20px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      border: none;
+      outline: none;
+      background: transparent;
+    }
+
+    .form-field input::placeholder {
+      color: var(--gray-300);
+      font-weight: 300;
+    }
+
+    .btn-login {
+      margin-top: 20px;
+      padding: 18px;
+      text-align: center;
+      border: var(--border);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      background: var(--black);
+      color: var(--white);
+      letter-spacing: 2px;
+      transition: all 0.2s var(--ease-out-expo);
+    }
+
+    .btn-login:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1.5px;
+      background: var(--gray-200);
+    }
+
+    .divider span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--gray-400);
+      letter-spacing: 2px;
+    }
+
+    .btn-google {
+      padding: 16px;
+      text-align: center;
+      border: var(--border);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--white);
+      color: var(--black);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.2s var(--ease-out-expo);
+    }
+
+    .btn-google:hover {
+      background: var(--gray-100);
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .btn-google svg { flex-shrink: 0; }
+
+    /* ─── Screen 4: History ─── */
+    .screen-history { justify-content: flex-start; padding-top: 24px; }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 24px;
+    }
+
+    .history-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .history-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--gray-400);
+      letter-spacing: 1px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .history-card {
+      border: var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s var(--ease-out-expo);
+    }
+
+    .history-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .history-card-header {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: var(--border-thin);
+    }
+
+    .history-date {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--gray-400);
+      letter-spacing: 1px;
+    }
+
+    .history-delete {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--gray-300);
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 14px;
+      color: var(--gray-400);
+      font-family: var(--font-mono);
+    }
+
+    .history-delete:hover {
+      border-color: var(--black);
+      color: var(--black);
+      background: var(--gray-100);
+    }
+
+    .history-before {
+      padding: 14px 16px;
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.6;
+      border-bottom: 1px dashed var(--gray-200);
+      position: relative;
+    }
+
+    .history-before::before {
+      content: 'B';
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--gray-300);
+      letter-spacing: 1px;
+    }
+
+    .history-after {
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.7;
+      background: var(--black);
+      color: var(--white);
+      position: relative;
+    }
+
+    .history-after::before {
+      content: 'A';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--gray-600);
+      letter-spacing: 1px;
+    }
+
+    /* ─── Bottom Nav ─── */
+    .bottom-nav {
+      display: flex;
+      border-top: var(--border);
+      flex-shrink: 0;
+      background: var(--white);
+      position: relative;
+      z-index: 30;
+    }
+
+    .nav-item {
+      flex: 1;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      transition: all 0.25s var(--ease-out-expo);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .nav-item + .nav-item {
+      border-left: var(--border);
+    }
+
+    .nav-item.active {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: square;
+      stroke-linejoin: miter;
+    }
+
+    /* ─── Loading Animation ─── */
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .loading-bar {
+      width: 120px;
+      height: 3px;
+      background: var(--gray-200);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -40%;
+      width: 40%;
+      height: 100%;
+      background: var(--black);
+      animation: loading-slide 1s ease-in-out infinite;
+    }
+
+    @keyframes loading-slide {
+      0% { left: -40%; }
+      100% { left: 100%; }
+    }
+
+    .loading-text {
+      margin-top: 16px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gray-400);
+    }
+
+    /* ─── Scrollbar ─── */
+    .screen::-webkit-scrollbar { width: 4px; }
+    .screen::-webkit-scrollbar-track { background: transparent; }
+    .screen::-webkit-scrollbar-thumb { background: var(--gray-300); }
+
+    /* ─── Delete animation ─── */
+    .history-card.deleting {
+      transform: translateX(100%);
+      opacity: 0;
+      max-height: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      transition: all 0.4s var(--ease-out-expo);
+    }
+
+    /* ─── On-load stagger ─── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stagger > * {
+      animation: fade-up 0.6s var(--ease-out-expo) both;
+    }
+    .stagger > *:nth-child(1) { animation-delay: 0.1s; }
+    .stagger > *:nth-child(2) { animation-delay: 0.18s; }
+    .stagger > *:nth-child(3) { animation-delay: 0.26s; }
+    .stagger > *:nth-child(4) { animation-delay: 0.34s; }
+    .stagger > *:nth-child(5) { animation-delay: 0.42s; }
+    .stagger > *:nth-child(6) { animation-delay: 0.50s; }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+  <!-- Nav Overlay -->
+  <div class="nav-overlay" id="navOverlay">
+    <a href="#" data-screen="input"><span class="nav-index">01</span>変換</a>
+    <a href="#" data-screen="result"><span class="nav-index">02</span>結果</a>
+    <a href="#" data-screen="login"><span class="nav-index">03</span>ログイン</a>
+    <a href="#" data-screen="history"><span class="nav-index">04</span>履歴</a>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">ネガポジ変換</div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <!-- Loading -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-bar"></div>
+      <div class="loading-text">CONVERTING</div>
+    </div>
+
+    <!-- Screen 1: Input -->
+    <div class="screen screen-input active" id="screen-input">
+      <div class="catchcopy stagger">
+        <span>モヤモヤを入れたら、</span><br>
+        <span class="accent">笑って戻れる。</span>
+      </div>
+      <div class="input-group">
+        <div class="textarea-wrap">
+          <textarea id="inputText" placeholder="ここに書いてみて..."></textarea>
+          <span class="char-count" id="charCount">0</span>
+        </div>
+        <button class="btn-convert" id="btnConvert">気持ちを切り替える</button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Result -->
+    <div class="screen screen-result" id="screen-result">
+      <div class="stagger">
+        <div class="result-label">YOUR INPUT</div>
+        <div class="original-text" id="originalText">上司に理不尽なことを言われた。もう限界かもしれない。</div>
+        <div class="result-label">CONVERTED</div>
+        <div class="converted-text" id="convertedText">
+          それだけ真剣に仕事に向き合ってる証拠。理不尽に耐えられる強さがあるのは、あなたがプロだから。限界と思えるのは、まだ限界じゃない証拠。
+        </div>
+        <div class="tone-section">
+          <div class="tone-label">TONE</div>
+          <div class="tone-chips">
+            <button class="tone-chip active">全力ポジティブ</button>
+            <button class="tone-chip">冷静に分析</button>
+            <button class="tone-chip">友達風</button>
+            <button class="tone-chip">哲学的</button>
+          </div>
+        </div>
+        <button class="btn-retry" id="btnRetry">もう一回吐き出す</button>
+      </div>
+    </div>
+
+    <!-- Screen 3: Login -->
+    <div class="screen screen-login" id="screen-login">
+      <div class="stagger">
+        <div class="login-header">おかえりなさい</div>
+        <div class="login-sub">ログインすると変換履歴が保存されます</div>
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">ログイン</button>
+          <button class="auth-tab" data-tab="signup">サインアップ</button>
+        </div>
+        <div class="auth-form">
+          <div class="form-field">
+            <label>EMAIL</label>
+            <input type="email" placeholder="you@example.com">
+          </div>
+          <div class="form-field">
+            <label>PASSWORD</label>
+            <input type="password" placeholder="••••••••">
+          </div>
+          <div class="form-field" id="nameField" style="display: none;">
+            <label>NAME</label>
+            <input type="text" placeholder="表示名">
+          </div>
+        </div>
+        <button class="btn-login">ログイン</button>
+        <div class="divider"><span>OR</span></div>
+        <button class="btn-google">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Googleでログイン
+        </button>
+      </div>
+    </div>
+
+    <!-- Screen 4: History -->
+    <div class="screen screen-history" id="screen-history">
+      <div class="stagger">
+        <div class="history-header">
+          <div class="history-title">変換履歴</div>
+          <div class="history-count">3 RECORDS</div>
+        </div>
+        <div class="history-list" id="historyList">
+          <div class="history-card">
+            <div class="history-card-header">
+              <span class="history-date">2026.03.09 — 14:32</span>
+              <button class="history-delete" onclick="deleteCard(this)">×</button>
+            </div>
+            <div class="history-before">上司に理不尽なことを言われた。もう限界かもしれない。</div>
+            <div class="history-after">それだけ真剣に向き合ってる証拠。限界と思えるのは、まだ余力がある証拠。</div>
+          </div>
+          <div class="history-card">
+            <div class="history-card-header">
+              <span class="history-date">2026.03.09 — 11:05</span>
+              <button class="history-delete" onclick="deleteCard(this)">×</button>
+            </div>
+            <div class="history-before">会議で自分の意見が完全にスルーされた。存在意義がわからない。</div>
+            <div class="history-after">発言できたこと自体がすごい。次はタイミングを変えるだけで届く。あなたの意見には価値がある。</div>
+          </div>
+          <div class="history-card">
+            <div class="history-card-header">
+              <span class="history-date">2026.03.08 — 18:47</span>
+              <button class="history-delete" onclick="deleteCard(this)">×</button>
+            </div>
+            <div class="history-before">また残業。プライベートの時間なんてない。</div>
+            <div class="history-after">それだけ求められている人材ということ。でも今日は早く帰ろう。自分を大事にできる人が最強。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-item active" data-screen="input">
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      INPUT
+    </button>
+    <button class="nav-item" data-screen="result">
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      RESULT
+    </button>
+    <button class="nav-item" data-screen="login">
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      ACCOUNT
+    </button>
+    <button class="nav-item" data-screen="history">
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      HISTORY
+    </button>
+  </div>
+</div>
+
+<script>
+  // ─── Screen Navigation ───
+  const screens = document.querySelectorAll('.screen');
+  const navItems = document.querySelectorAll('.nav-item[data-screen]');
+  const overlayLinks = document.querySelectorAll('.nav-overlay a[data-screen]');
+
+  function switchScreen(name) {
+    screens.forEach(s => s.classList.remove('active'));
+    navItems.forEach(n => n.classList.remove('active'));
+
+    const target = document.getElementById('screen-' + name);
+    if (target) {
+      target.classList.add('active');
+      // Re-trigger stagger animation
+      const stagger = target.querySelector('.stagger');
+      if (stagger) {
+        stagger.style.animation = 'none';
+        stagger.offsetHeight;
+        stagger.style.animation = '';
+        Array.from(stagger.children).forEach(child => {
+          child.style.animation = 'none';
+          child.offsetHeight;
+          child.style.animation = '';
+        });
+      }
+    }
+
+    navItems.forEach(n => {
+      if (n.dataset.screen === name) n.classList.add('active');
+    });
+
+    // Close hamburger
+    document.getElementById('hamburger').classList.remove('active');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => switchScreen(item.dataset.screen));
+  });
+
+  overlayLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchScreen(link.dataset.screen);
+    });
+  });
+
+  // ─── Hamburger ───
+  const hamburger = document.getElementById('hamburger');
+  const navOverlay = document.getElementById('navOverlay');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navOverlay.classList.toggle('open');
+  });
+
+  // ─── Character Count ───
+  const inputText = document.getElementById('inputText');
+  const charCount = document.getElementById('charCount');
+
+  inputText.addEventListener('input', () => {
+    const len = inputText.value.length;
+    charCount.textContent = len;
+    charCount.classList.toggle('has-text', len > 0);
+  });
+
+  // ─── Convert Button ───
+  const btnConvert = document.getElementById('btnConvert');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+
+  btnConvert.addEventListener('click', () => {
+    const text = inputText.value.trim();
+    if (!text) {
+      // Shake effect
+      const wrap = document.querySelector('.textarea-wrap');
+      wrap.style.animation = 'none';
+      wrap.offsetHeight;
+      wrap.style.animation = 'shake 0.4s ease';
+      return;
+    }
+
+    document.getElementById('originalText').textContent = text;
+
+    // Show loading
+    loadingOverlay.classList.add('active');
+
+    setTimeout(() => {
+      loadingOverlay.classList.remove('active');
+      switchScreen('result');
+    }, 1500);
+  });
+
+  // ─── Retry Button ───
+  document.getElementById('btnRetry').addEventListener('click', () => {
+    inputText.value = '';
+    charCount.textContent = '0';
+    charCount.classList.remove('has-text');
+    switchScreen('input');
+    setTimeout(() => inputText.focus(), 400);
+  });
+
+  // ─── Auth Tabs ───
+  const authTabs = document.querySelectorAll('.auth-tab');
+  const nameField = document.getElementById('nameField');
+  const btnLogin = document.querySelector('.btn-login');
+
+  authTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      authTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      if (tab.dataset.tab === 'signup') {
+        nameField.style.display = 'block';
+        btnLogin.textContent = 'サインアップ';
+      } else {
+        nameField.style.display = 'none';
+        btnLogin.textContent = 'ログイン';
+      }
+    });
+  });
+
+  // ─── Tone Chips ───
+  document.querySelectorAll('.tone-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // ─── Delete Card ───
+  function deleteCard(btn) {
+    const card = btn.closest('.history-card');
+    card.classList.add('deleting');
+    setTimeout(() => {
+      card.remove();
+      const remaining = document.querySelectorAll('.history-card').length;
+      document.querySelector('.history-count').textContent = remaining + ' RECORDS';
+    }, 400);
+  }
+
+  // ─── Shake Animation ───
+  const shakeStyle = document.createElement('style');
+  shakeStyle.textContent = `
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+  `;
+  document.head.appendChild(shakeStyle);
+</script>
+
+</body>
+</html>

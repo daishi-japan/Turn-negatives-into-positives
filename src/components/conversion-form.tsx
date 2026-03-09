@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useConversionResult } from "@/lib/use-conversion-result";
 
@@ -78,6 +78,8 @@ export function ConversionForm() {
   const [error, setError] = useState("");
   const [loadingMsg, setLoadingMsg] = useState("");
   const [msgFade, setMsgFade] = useState(true);
+  const [shaking, setShaking] = useState(false);
+  const textareaWrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { setResult, getDraft, setDraft, getDraftTone } = useConversionResult();
 
@@ -110,7 +112,12 @@ export function ConversionForm() {
   }, [loading, tone]);
 
   const handleSubmit = async () => {
-    if (!text.trim() || loading) return;
+    if (loading) return;
+    if (!text.trim()) {
+      setShaking(true);
+      setTimeout(() => setShaking(false), 400);
+      return;
+    }
     setError("");
     setLoading(true);
 
@@ -148,118 +155,153 @@ export function ConversionForm() {
   const isOverLimit = charCount > MAX_LENGTH;
 
   return (
-    <div className="flex-1 flex flex-col px-8 pt-10 pb-12">
-      <h1 className="text-[22px] font-black text-center mb-8 leading-relaxed">
-        モヤモヤを入れたら、
-        <br />
-        <span className="inline-block bg-black text-white px-2 py-0.5">
-          笑って戻れる。
-        </span>
-      </h1>
-
-      <div className="relative">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder={"例：上司に理不尽に怒られた\n例：プレゼンで頭が真っ白になった\n例：月曜日が来るのが怖い"}
-          maxLength={MAX_LENGTH}
-          className="w-full border-2 border-black p-5 min-h-[140px] text-[15px] leading-relaxed resize-none focus:outline-none placeholder:text-gray-300"
-        />
-        {text && (
-          <button
-            onClick={handleClearDraft}
-            className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-gray-300 hover:text-black text-sm cursor-pointer"
-            title="クリア"
-          >
-            ×
-          </button>
-        )}
-      </div>
-
-      <div className="flex justify-end mt-1">
-        <span
-          className={`text-xs ${
-            isOverLimit
-              ? "text-red-500 font-bold"
-              : isNearLimit
-              ? "text-gray-500"
-              : "text-gray-400"
-          }`}
-        >
-          {charCount}/{MAX_LENGTH}
-        </span>
-      </div>
-
-      {/* Tone selection */}
-      <div className="flex gap-2 flex-wrap mt-3 mb-3">
-        {TONES.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTone(t.key)}
-            className={`border-2 px-3 py-1.5 text-xs font-bold cursor-pointer ${
-              tone === t.key
-                ? "border-black bg-black text-white"
-                : "border-gray-300 text-gray-400 hover:border-black hover:text-black"
+    <div className="flex-1 flex flex-col relative">
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 bg-[#fafafa] flex flex-col items-center justify-center z-20">
+          <div className="loading-bar" />
+          <p
+            className={`mt-4 text-[10px] tracking-[3px] text-[#999] transition-opacity duration-300 ${
+              msgFade ? "opacity-100" : "opacity-0"
             }`}
+            style={{ fontFamily: "var(--font-dm-mono)" }}
           >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Feeling selection */}
-      <div className="flex gap-2 flex-wrap mb-4">
-        {FEELINGS.map((f) => (
-          <button
-            key={f.key}
-            onClick={() =>
-              setFeelings((prev) =>
-                prev.includes(f.key)
-                  ? prev.filter((k) => k !== f.key)
-                  : [...prev, f.key]
-              )
-            }
-            className={`px-3 py-1 text-[11px] rounded-full border cursor-pointer ${
-              feelings.includes(f.key)
-                ? "border-black bg-black text-white"
-                : "border-gray-300 text-gray-400 hover:border-black hover:text-black"
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
-      {error && (
-        <div className="mt-3 px-4 py-3 border-2 border-black bg-gray-100 text-sm text-black">
-          {error}
+            {loadingMsg}
+          </p>
         </div>
       )}
 
-      <button
-        onClick={handleSubmit}
-        disabled={loading || !text.trim() || isOverLimit}
-        className="w-full mt-4 py-[18px] text-center border-2 border-black text-[15px] font-black bg-black text-white tracking-[2px] hover:bg-[#333] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-      >
-        {loading ? (
-          <span className="flex items-center justify-center gap-2">
-            <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            変換中...
-          </span>
-        ) : (
-          "気持ちを切り替える"
-        )}
-      </button>
+      <div className="flex-1 flex flex-col justify-center px-7 py-8">
+        <div className="stagger">
+          {/* Catchcopy */}
+          <h1 className="text-[26px] font-black leading-[1.7] mb-10 tracking-[-0.5px]">
+            モヤモヤを入れたら、
+            <br />
+            <span className="inline bg-[#0a0a0a] text-[#fafafa] px-2.5 py-[3px] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">
+              笑って戻れる。
+            </span>
+          </h1>
 
-      {loading && loadingMsg && (
-        <p
-          className={`text-center text-xs text-gray-400 mt-3 transition-opacity duration-300 ${
-            msgFade ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          {loadingMsg}
-        </p>
-      )}
+          {/* Textarea */}
+          <div className="flex flex-col gap-0">
+            <div
+              ref={textareaWrapRef}
+              className={`border-[3px] border-[#0a0a0a] relative transition-shadow duration-300 ${
+                shaking ? "animate-shake" : ""
+              }`}
+              style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
+            >
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder={"ここに書いてみて..."}
+                maxLength={MAX_LENGTH}
+                className="w-full min-h-[140px] p-5 text-[15px] leading-[1.8] resize-vertical border-none outline-none bg-transparent placeholder:text-[#c0c0c0] placeholder:font-light focus-within:shadow-none"
+                onFocus={() => {
+                  if (textareaWrapRef.current) {
+                    textareaWrapRef.current.style.boxShadow = "4px 4px 0 #0a0a0a";
+                  }
+                }}
+                onBlur={() => {
+                  if (textareaWrapRef.current) {
+                    textareaWrapRef.current.style.boxShadow = "none";
+                  }
+                }}
+              />
+              {text && (
+                <button
+                  onClick={handleClearDraft}
+                  className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-[#c0c0c0] hover:text-[#0a0a0a] text-sm cursor-pointer"
+                  title="クリア"
+                >
+                  ×
+                </button>
+              )}
+              <span
+                className={`absolute bottom-2 right-3 text-[11px] transition-colors duration-200 ${
+                  isOverLimit ? "text-red-500 font-bold" : charCount > 0 ? "text-[#666]" : "text-[#c0c0c0]"
+                }`}
+                style={{ fontFamily: "var(--font-dm-mono)" }}
+              >
+                {charCount}
+              </span>
+            </div>
+          </div>
+
+          {/* Tone chips */}
+          <div className="mt-5">
+            <div
+              className="text-[10px] tracking-[2px] text-[#999] mb-3"
+              style={{ fontFamily: "var(--font-dm-mono)" }}
+            >
+              TONE
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {TONES.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => setTone(t.key)}
+                  className={`border-2 border-[#0a0a0a] px-4 py-2 text-[12px] font-bold tracking-[1px] cursor-pointer transition-all duration-200 ${
+                    tone === t.key
+                      ? "bg-[#0a0a0a] text-white translate-x-[-2px] translate-y-[-2px] shadow-[2px_2px_0_#0a0a0a]"
+                      : "bg-[#fafafa] text-[#0a0a0a] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0_#0a0a0a]"
+                  }`}
+                  style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Feeling chips */}
+          <div className="mt-4">
+            <div
+              className="text-[10px] tracking-[2px] text-[#999] mb-3"
+              style={{ fontFamily: "var(--font-dm-mono)" }}
+            >
+              FEELING
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {FEELINGS.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() =>
+                    setFeelings((prev) =>
+                      prev.includes(f.key)
+                        ? prev.filter((k) => k !== f.key)
+                        : [...prev, f.key]
+                    )
+                  }
+                  className={`border-2 px-4 py-2 text-[11px] cursor-pointer transition-all duration-200 ${
+                    feelings.includes(f.key)
+                      ? "border-[#0a0a0a] bg-[#0a0a0a] text-white"
+                      : "border-[#c0c0c0] text-[#999] hover:border-[#0a0a0a] hover:text-[#0a0a0a]"
+                  }`}
+                  style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {error && (
+            <div className="mt-4 px-5 py-4 border-[3px] border-[#0a0a0a] bg-[#f0f0f0] text-sm text-[#0a0a0a]">
+              {error}
+            </div>
+          )}
+
+          {/* Convert button */}
+          <button
+            onClick={handleSubmit}
+            disabled={loading || isOverLimit}
+            className="btn-brutalist w-full mt-5 py-5 text-center border-[3px] border-[#0a0a0a] text-[15px] font-black bg-[#0a0a0a] text-white tracking-[3px] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            気持ちを切り替える
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
