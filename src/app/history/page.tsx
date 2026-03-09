@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header";
-import { BottomNav } from "@/components/bottom-nav";
+
 import { createClient } from "@/lib/supabase/client";
 import { useConversionResult } from "@/lib/use-conversion-result";
 
@@ -312,7 +312,6 @@ export default function HistoryPage() {
           </div>
         )}
       </div>
-      <BottomNav />
     </div>
   );
 }
